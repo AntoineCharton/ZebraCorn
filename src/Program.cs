@@ -7,6 +7,7 @@ using Discord;
 using Discord.WebSocket;
 
 using Tommy;
+using ZebraCorn.StringRules;
 
 namespace ZebraCorn
 {
@@ -49,9 +50,13 @@ namespace ZebraCorn
                 return Task.CompletedTask;
             };
             
+            //StringRules
+            var containsUrl = new ContainsURL();
+            var maxCharacters = new HasMaxCharacters();
+            
             //Rules
             Client.AddLogMessages();
-            Client.AddRuleGrouping(applyToAllChannels: true); //appliedChannels: _groupingRuleAppliedChannels);
+            Client.AddRuleGrouping(ruleExceptions: new IStringRule[]{containsUrl, maxCharacters}, applyToAllChannels: true); //appliedChannels: _groupingRuleAppliedChannels);
             Client.AddRuleTagging(applyToAllChannels: true, illegalTags: _illegalTags);
             //"Don't @ mods unless it's urgent. Better be a life and death situation!!! \nUse reply instead.");
 

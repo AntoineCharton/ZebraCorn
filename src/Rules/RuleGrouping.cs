@@ -1,21 +1,21 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-
 using Discord;
 using Discord.WebSocket;
+using ZebraCorn.StringRules;
 
 namespace ZebraCorn
 {
     public static class RuleGrouping
     {
-        public static void AddRuleGrouping(this DiscordSocketClient client, Int32 repetitions = 5, Int32 timeInSeconds = 60, Boolean applyToAllChannels = false, params String[] appliedChannels)
+        public static void AddRuleGrouping(this DiscordSocketClient client, Int32 repetitions = 3, Int32 timeInSeconds = 60, Boolean applyToAllChannels = false, IStringRule [] ruleExceptions = null, params String[] appliedChannels)
         {
-            client.MessageReceived += (message) => OnMessageReceived(message, repetitions, timeInSeconds, applyToAllChannels, appliedChannels);
+            client.MessageReceived += (message) => OnMessageReceived(message, repetitions, timeInSeconds, applyToAllChannels, ruleExceptions, appliedChannels);
             Console.WriteLine("ADDED: Grouping rule");
         }
         
-        private static async Task OnMessageReceived(SocketMessage message, Int32 repetitions, Int32 timeInSeconds, Boolean applyToAllChannels, String[] appliedChannels)
+        private static async Task OnMessageReceived(SocketMessage message, Int32 repetitions, Int32 timeInSeconds, Boolean applyToAllChannels, IStringRule [] ruleExceptions, String[] appliedChannels)
         {
             Boolean isRuleApplied = (appliedChannels.Contains(message.Channel.Name) ||
                                      appliedChannels.Contains(message.Channel.Id.ToString())) || applyToAllChannels;
@@ -35,6 +35,13 @@ namespace ZebraCorn
             {
                 var timeSpan = (message.Timestamp - lastMessage.Timestamp ).TotalSeconds;
                 if (author != lastMessage.Author || timeSpan > timeInSeconds) break;
+
+                foreach (var ruleException in ruleExceptions)
+                {
+                    if (ruleException.IsValid(lastMessage.Content))
+                        return;
+                }
+               
                 
                 if (author == lastMessage.Author && offenceCount == repetitions - 2)
                 {
