@@ -53,6 +53,7 @@ namespace ZebraCorn
             Client.AddLogMessages();
             Client.AddRuleGrouping(applyToAllChannels: true); //appliedChannels: _groupingRuleAppliedChannels);
             Client.AddRuleTagging(applyToAllChannels: true, illegalTags: _illegalTags);
+            ConsoleTalk.CheckForMessages();
             //"Don't @ mods unless it's urgent. Better be a life and death situation!!! \nUse reply instead.");
 
             await Task.Delay(millisecondsDelay: -1);
