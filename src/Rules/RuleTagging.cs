@@ -17,13 +17,14 @@ namespace ZebraCorn
 
         static async Task MessageReceived(SocketMessage message, String[] illegalTags, Boolean applyToAllChannels,  String[] appliedChannels)
         {
-            //if(message.Author.Id == client.CurrentUser.Id || (channelName != AllChannels && message.Channel.Name != channelName)) return;
             Boolean isRuleApplied = (appliedChannels.Contains(message.Channel.Name) ||
                                      appliedChannels.Contains(message.Channel.Id.ToString())) || applyToAllChannels;
 
-            Boolean sentBySelf = (message.Author.Id == Program.Client.CurrentUser.Id);
+            Boolean isSentBySelf = (message.Author.Id == Program.Client.CurrentUser.Id);
             
-            if (sentBySelf || !isRuleApplied) return;
+            Boolean isSentByMod = illegalTags.Contains(message.Author.Id.ToString());
+            
+            if (isSentBySelf || isSentByMod || !isRuleApplied) return;
 
             var channel = Program.Client.GetChannel(message.Channel.Id) as IMessageChannel;
             
@@ -31,28 +32,24 @@ namespace ZebraCorn
 
             foreach (String illegalTag in illegalTags)
             {
-                if (lastMessages.Content.Contains(illegalTag))
-                {
-                    Console.ForegroundColor = ConsoleColor.Yellow;
-                    Console.WriteLine("Warning given to " + message.Author.Username + " to avoid word");
-                    Console.ForegroundColor = ConsoleColor.White;
-                    
-                    if (channel != null)
-                    {
-                        //await
-                        EmbedBuilder embed = new()
-                        {
-                            // Embed property can be set within object initializer
-                            Title = "⚠WARNING!⚠",
-                            Description = "Don't tag Mods please!!!!"
-                        };
+                if (!lastMessages.Content.Contains(illegalTag)) continue;
 
-                        await channel.SendMessageAsync(embed: embed.Build());
-                    } 
-                    //await channel.SendMessageAsync(lastMessages.Author.Mention + "\n```WARNING !!!! \n" + warningMessage + "```");
-                        
-                    break;
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine("Warning given to " + message.Author.Username + " to stop tagging mods.");
+                Console.ForegroundColor = ConsoleColor.White;
+                    
+                if (channel != null)
+                {
+                    EmbedBuilder embed = new()
+                    {
+                        Title = "⚠WARNING!⚠",
+                        Description = "Don't tag Mods please!!!!"
+                    };
+
+                    await channel.SendMessageAsync(embed: embed.Build());
                 }
+
+                break;
             }
         }
     }
