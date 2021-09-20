@@ -24,7 +24,7 @@ namespace ZebraCorn
         
         static async Task MessageReceived(SocketMessage message, DiscordSocketClient client, string [] forbiddenStrings, string warningMessage = "Forbidden message!!!", string channelName = AllChannels)
         {
-            if(message.Author.Id == client.CurrentUser.Id || (channelName != AllChannels && message.Channel.Name != channelName))
+            if(message.Author.IsBot || (channelName != AllChannels && message.Channel.Name != channelName))
                 return;
             var channel = client.GetChannel(message.Channel.Id) as IMessageChannel;
             var lastMessages =  await message.Channel.GetMessageAsync(message.Id);

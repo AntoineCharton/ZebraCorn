@@ -89,7 +89,9 @@
     <ItemGroup>
         <Compile Include="ForbiddenStringsRule.cs" />
         <Compile Include="GroupRule.cs" />
+        <Compile Include="IMessageRule.cs" />
         <Compile Include="LogMessages.cs" />
+        <Compile Include="MessageContainsHyperlink.cs" />
         <Compile Include="Program.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
     </ItemGroup>

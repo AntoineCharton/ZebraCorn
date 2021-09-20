@@ -32,9 +32,12 @@ namespace ZebraCorn
                 return Task.CompletedTask;
             };
             
+            //Messages rules
+            var messageContainsHyperlink = new MessageContainsHyperlink();
+            
             //Rules
             _client.AddLogMessages();
-            _client.AddGroupingRule("help");
+            _client.AddGroupingRule("help", new IMessageRule[]{messageContainsHyperlink});
             _client.AddForbiddenStringRule(new []{SamId, ChizaruuId, WalterId, AnishId, GeekZebraId, DevGameId, TestModId, ModId}, "Don't @ mods unless it's urgent. Better be a life and death situation!!! \nUse reply instead.");
 
             await Task.Delay(-1);
