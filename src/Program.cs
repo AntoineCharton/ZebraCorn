@@ -7,6 +7,7 @@ using Discord;
 using Discord.WebSocket;
 
 using Tommy;
+using ZebraCorn.Rules;
 using ZebraCorn.Rules.MessagesRules;
 
 namespace ZebraCorn
@@ -60,6 +61,7 @@ namespace ZebraCorn
             Client.AddLogMessages();
             Client.AddRuleGrouping(ruleExceptions: new IMessagesRule[]{containsUrl, maxCharacters, containsAttachment, containsSticker}, applyToAllChannels: true); //appliedChannels: _groupingRuleAppliedChannels);
             Client.AddRuleTagging(applyToAllChannels: true, illegalTags: _illegalTags);
+            Client.AddRuleFormatCode(true);
             //"Don't @ mods unless it's urgent. Better be a life and death situation!!! \nUse reply instead.");
 
             await Task.Delay(-1);
