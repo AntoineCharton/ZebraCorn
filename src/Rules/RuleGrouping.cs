@@ -20,9 +20,9 @@ namespace ZebraCorn
             Boolean isRuleApplied = (appliedChannels.Contains(message.Channel.Name) ||
                                      appliedChannels.Contains(message.Channel.Id.ToString())) || applyToAllChannels;
 
-            Boolean sentBySelf = (message.Author.Id == Program.Client.CurrentUser.Id);
+            Boolean isBot = message.Author.IsBot;
             
-            if (sentBySelf || !isRuleApplied) return;
+            if (isBot || !isRuleApplied) return;
             
             var channel = Program.Client.GetChannel(message.Channel.Id) as IMessageChannel;
             
