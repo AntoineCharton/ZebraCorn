@@ -3,19 +3,19 @@ using System.Linq;
 using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
-using ZebraCorn.StringRules;
+using ZebraCorn.Rules.MessagesRules;
 
 namespace ZebraCorn
 {
     public static class RuleGrouping
     {
-        public static void AddRuleGrouping(this DiscordSocketClient client, Int32 repetitions = 3, Int32 timeInSeconds = 60, Boolean applyToAllChannels = false, IStringRule [] ruleExceptions = null, params String[] appliedChannels)
+        public static void AddRuleGrouping(this DiscordSocketClient client, Int32 repetitions = 3, Int32 timeInSeconds = 60, Boolean applyToAllChannels = false, IMessagesRule [] ruleExceptions = null, params String[] appliedChannels)
         {
             client.MessageReceived += (message) => OnMessageReceived(message, repetitions, timeInSeconds, applyToAllChannels, ruleExceptions, appliedChannels);
             Console.WriteLine("ADDED: Grouping rule");
         }
         
-        private static async Task OnMessageReceived(SocketMessage message, Int32 repetitions, Int32 timeInSeconds, Boolean applyToAllChannels, IStringRule [] ruleExceptions, String[] appliedChannels)
+        private static async Task OnMessageReceived(SocketMessage message, Int32 repetitions, Int32 timeInSeconds, Boolean applyToAllChannels, IMessagesRule [] ruleExceptions, String[] appliedChannels)
         {
             Boolean isRuleApplied = (appliedChannels.Contains(message.Channel.Name) ||
                                      appliedChannels.Contains(message.Channel.Id.ToString())) || applyToAllChannels;
@@ -38,7 +38,7 @@ namespace ZebraCorn
 
                 foreach (var ruleException in ruleExceptions)
                 {
-                    if (ruleException.IsValid(lastMessage.Content))
+                    if (ruleException.IsValid(lastMessage))
                         return;
                 }
                

@@ -1,17 +1,17 @@
-using System;
 using System.Text.RegularExpressions;
+using Discord;
 
-namespace ZebraCorn.StringRules
+namespace ZebraCorn.Rules.MessagesRules
 {
-    public class ContainsURL: IStringRule
+    public class ContainsUrl: IMessagesRule
     {
-        public bool IsValid(string value)
+        public bool IsValid(IMessage message)
         {
-            var text = Regex.Replace(value,
+            var text = Regex.Replace(message.Content,
                 @"((http|ftp|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&amp;:/~\+#]*[\w\-\@?^=%&amp;/~\+#])?)",
                 "<a target='_blank' href='$1'>$1</a>");
 
-            if (text != value)
+            if (text != message.Content)
                 return true;
 
             return false;
