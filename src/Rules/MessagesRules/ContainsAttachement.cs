@@ -10,7 +10,7 @@ namespace ZebraCorn.Rules.MessagesRules
             if (message.Attachments!= null && message.Attachments.ToArray().Length == 0)
                 return false;
             
-            if (message.Attachments.Count != 0)
+            if (message.Attachments != null && message.Attachments.Count != 0)
                 return true;
 
             return false;

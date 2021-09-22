@@ -6,7 +6,7 @@ namespace ZebraCorn.Rules.MessagesRules
     {
         private readonly int _maxCharacters;
         
-        public HasMaxCharacters(int number = 90)
+        public HasMaxCharacters(int number = 50)
         {
             _maxCharacters = number;
         }
