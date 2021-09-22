@@ -56,10 +56,11 @@ namespace ZebraCorn
             var maxCharacters = new HasMaxCharacters();
             var containsAttachment = new ContainsAttachement();
             var containsSticker = new ContainsSticker();
+            var containsReply = new ContainsReply();
             
             //Rules
             Client.AddLogMessages();
-            Client.AddRuleGrouping(ruleExceptions: new IMessagesRule[]{containsUrl, maxCharacters, containsAttachment, containsSticker}, applyToAllChannels: true); //appliedChannels: _groupingRuleAppliedChannels);
+            Client.AddRuleGrouping(ruleExceptions: new IMessagesRule[]{containsUrl, maxCharacters, containsAttachment, containsSticker, containsReply}, applyToAllChannels: true); //appliedChannels: _groupingRuleAppliedChannels);
             Client.AddRuleTagging(applyToAllChannels: true, illegalTags: _illegalTags);
             Client.AddRuleFormatCode(true);
             //"Don't @ mods unless it's urgent. Better be a life and death situation!!! \nUse reply instead.");

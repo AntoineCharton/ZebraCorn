@@ -1,16 +1,16 @@
-using System.Linq;
+using System;
 using Discord;
 
 namespace ZebraCorn.Rules.MessagesRules
 {
-    public class ContainsAttachement : IMessagesRule
+    public class ContainsReply: IMessagesRule
     {
         public bool IsValid(IMessage message)
         {
-            if (message.Attachments!= null && message.Attachments.ToArray().Length == 0)
+            if (message.Reference == null)
                 return false;
             
-            if (message.Attachments.Count != 0)
+            if (message.Reference.MessageId.IsSpecified )
                 return true;
 
             return false;
