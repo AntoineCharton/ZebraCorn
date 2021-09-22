@@ -89,7 +89,7 @@ namespace ZebraCorn.Rules
                     await message.Channel.SendMessageAsync(embed: embed.Build());
                 }
             }
-            else if(normalizedCodeScore > 5)
+            else if(normalizedCodeScore > 5 && !message.Content.Contains("```"))
             {
                 if (message.Content.Contains('\n') && normalizedCodeScore > 6)
                 {
