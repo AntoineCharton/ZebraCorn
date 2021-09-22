@@ -31,11 +31,17 @@ namespace ZebraCorn
             var author = message.Author;
             var offenceCount = 0;
             
+            foreach (var ruleException in ruleExceptions)
+            {
+                if (ruleException.IsValid(message))
+                    return;
+            }
+            
             foreach (IMessage lastMessage in lastMessages)
             {
                 var timeSpan = (message.Timestamp - lastMessage.Timestamp ).TotalSeconds;
                 if (author != lastMessage.Author || timeSpan > timeInSeconds) break;
-
+                
                 foreach (var ruleException in ruleExceptions)
                 {
                     if (ruleException.IsValid(lastMessage))
