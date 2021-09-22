@@ -1,3 +1,5 @@
+using System;
+using System.Linq;
 using Discord;
 
 namespace ZebraCorn.Rules.MessagesRules
@@ -6,7 +8,11 @@ namespace ZebraCorn.Rules.MessagesRules
     {
         public bool IsValid(IMessage message)
         {
-            if (message.Stickers.Count != 0)
+            //Stickers was throwing errors. Only sticker post can have empty messages
+            if (message.Attachments!= null && message.Attachments.ToArray().Length != 0)
+                return false;
+            
+            if (message.Content == "")
                 return true;
 
             return false;
