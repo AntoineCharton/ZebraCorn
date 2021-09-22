@@ -57,8 +57,13 @@ namespace ZebraCorn.Rules
             }
 
             var normalizedCodeScore = ((float) codeScore / message.Content.Length) * 100;
-
-            Console.WriteLine(normalizedCodeScore);
+            
+            //For some reason messages containing URL Increase the count a lot
+            var ContainsURL = new ContainsUrl();
+            if (ContainsURL.IsValid(message))
+                normalizedCodeScore -= 3;
+            
+            Console.WriteLine("Code score" + normalizedCodeScore);
             if (normalizedCodeScore > 5 && !message.Content.Contains("```") && !message.Content.Contains('`'))
             {
                 Console.WriteLine("Warning given to user to format code " + normalizedCodeScore);
