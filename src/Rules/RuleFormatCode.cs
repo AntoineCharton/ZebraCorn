@@ -74,7 +74,7 @@ namespace ZebraCorn.Rules
                         // Embed property can be set within object initializer
                         Title = "⚠WARNING!⚠",
                         Description =
-                            "Use markdown!!! \n \n ***\\`\\`\\` \n class YourClass \n { \n your awsome code \n } \n \\`\\`\\`*** \n "
+                            "Use markdown!!! \n \n ***\\`\\`\\`cs \n class YourClass \n { \n your awsome code \n } \n \\`\\`\\`*** \n "
                     };
                     await message.Channel.SendMessageAsync(embed: embed.Build());
                 }
@@ -84,7 +84,7 @@ namespace ZebraCorn.Rules
                     {
                         // Embed property can be set within object initializer
                         Title = "🗨️USE MARKDOWN🗨️",
-                        Description = "\n \n ***\\` YourLineOfCode () \\`*** \n \n OR \n \n ***\\`\\`\\` \n class YourClass \n { \n your awsome code \n } \n \\`\\`\\`***"
+                        Description = "\n \n ***\\` YourLineOfCode () \\`*** \n \n OR \n \n ***\\`\\`\\`cs \n class YourClass \n { \n your awsome code \n } \n \\`\\`\\`***"
                     };
                     await message.Channel.SendMessageAsync(embed: embed.Build());
                 }
@@ -99,7 +99,7 @@ namespace ZebraCorn.Rules
                         // Embed property can be set within object initializer
                         Title = "🗨️USE MARKDOWN🗨️",
                         Description =
-                            "\n ***\\`\\`\\` \n class YourClass \n { \n your awsome code \n } \n \\`\\`\\`*** \n "
+                            "\n ***\\`\\`\\`cs \n class YourClass \n { \n your awsome code \n } \n \\`\\`\\`*** \n "
                     };
 
                     await message.Channel.SendMessageAsync(embed: embed.Build());
