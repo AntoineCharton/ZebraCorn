@@ -26,7 +26,7 @@ namespace ZebraCorn
             
             var channel = Program.Client.GetChannel(message.Channel.Id) as IMessageChannel;
             
-            var lastMessages =  await message.Channel.GetMessagesAsync(message.Id, Direction.Before, repetitions).FlattenAsync();
+            var lastMessages =  await message.Channel.GetMessagesAsync(message.Id, Direction.Before, repetitions + 1).FlattenAsync();
 
             var author = message.Author;
             var offenceCount = 0;
