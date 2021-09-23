@@ -24,18 +24,19 @@ namespace ZebraCorn.Rules
             Boolean isRuleApplied = (appliedChannels.Contains(message.Channel.Name) ||
                                      appliedChannels.Contains(message.Channel.Id.ToString())) || applyToAllChannels;
 
-            if (message.Author.IsBot || message.Content.Length < 50 && !isRuleApplied)
+            if (message.Author.IsBot || message.Content.Length < 50 && !isRuleApplied) 
                 return;
 
-            var contains = new[]
-            {
-                "MonoBehaviour", "Using", "UnityEngine", "0f", "System.Collections", "System.Collections.Generic",
-                "public", "private", "internal", "float", "void", "Update", "Quaternion", "class", "-=", "+="
+            if (message.Content.Contains("```")) return; //exit early
+
+            String[] contains = {
+                "MonoBehaviour", "using", "UnityEngine", "0f", "1f", "System.Collections", "System.Collections.Generic",
+                "public", "private", "internal", "int ", "float", "void", "Start()", "OnEnable()", "OnDisable()", "Update()", "Vector2", "Vector3", "Vector4", "Quaternion", "class", "-=", "+="
             };
 
             var codeScore = contains.Count(value => message.Content.Contains(value));
 
-            codeScore += message.Content.Count(character => character is '{' or '}' or '(' or ')' or '=' or '+' or '-' or '*' or '\n');
+            codeScore += message.Content.Count(character => character is '{' or '}' or ';' or '(' or ')' or '=' or '+' or '-' or '*' or '\n');
 
             var normalizedCodeScore = ((float) codeScore / message.Content.Length) * 100;
             
@@ -48,46 +49,48 @@ namespace ZebraCorn.Rules
                 normalizedCodeScore -= 5;
             
             Console.WriteLine("Code score" + normalizedCodeScore);
-            if (normalizedCodeScore > 6 && !message.Content.Contains("```") && !message.Content.Contains('`'))
-            {
-                Console.WriteLine("Warning given to user to format code " + normalizedCodeScore);
-                if (normalizedCodeScore > 7 && message.Content.Contains('\n'))
-                {
-                    EmbedBuilder embed = new()
-                    {
-                        // Embed property can be set within object initializer
-                        Title = "⚠WARNING!⚠",
-                        Description =
-                            "Use markdown!!! \n \n ***\\`\\`\\`cs \n class YourClass \n { \n your awesome code \n } \n \\`\\`\\`*** \n "
-                    };
-                    await message.Channel.SendMessageAsync(embed: embed.Build());
-                }
-                else if(message.Content.Contains('\n'))
-                {
-                    EmbedBuilder embed = new()
-                    {
-                        // Embed property can be set within object initializer
-                        Title = "🗨️USE MARKDOWN🗨️",
-                        Description = "\n \n ***\\` YourLineOfCode () \\`*** \n \n OR \n \n ***\\`\\`\\`cs \n class YourClass \n { \n your awesome code \n } \n \\`\\`\\`***"
-                    };
-                    await message.Channel.SendMessageAsync(embed: embed.Build());
-                }
-            }
-            else if(normalizedCodeScore > 6 && !message.Content.Contains("```"))
-            {
-                if (message.Content.Contains('\n') && normalizedCodeScore > 6)
-                {
-                    Console.WriteLine("Tip given to improve formatting" + normalizedCodeScore);
-                    EmbedBuilder embed = new()
-                    {
-                        // Embed property can be set within object initializer
-                        Title = "🗨️USE MARKDOWN🗨️",
-                        Description =
-                            "\n ***\\`\\`\\`cs \n class YourClass \n { \n your awesome code \n } \n \\`\\`\\`*** \n "
-                    };
 
-                    await message.Channel.SendMessageAsync(embed: embed.Build());
+            if (normalizedCodeScore > 6)
+            {
+                if(message.Content.Contains('`'))
+                {
+                    if (normalizedCodeScore > 7 && message.Content.Contains('\n'))
+                    {
+                        Console.WriteLine("Warning given to user to format code " + normalizedCodeScore);
+                        EmbedBuilder embed = new()
+                        {
+                            Title = "🗨️USE MARKDOWN🗨️",
+                            Description =
+                                "\n ***\\`\\`\\`cs \n class YourClass \n { \n your awesome code \n } \n \\`\\`\\`*** \n "
+                        };
+                        await message.Channel.SendMessageAsync(embed: embed.Build());
+                    }
+                    else if(message.Content.Contains('\n'))
+                    {
+                        Console.WriteLine("Tip given to improve formatting" + normalizedCodeScore);
+                        EmbedBuilder embed = new()
+                        {
+                            Title = "🗨️USE MARKDOWN🗨️",
+                            Description = "\n \n ***\\` YourLineOfCode () \\`*** \n \n OR \n \n ***\\`\\`\\`cs \n class YourClass \n { \n your awesome code \n } \n \\`\\`\\`***"
+                        };
+                        await message.Channel.SendMessageAsync(embed: embed.Build());
+                    }
                 }
+                else
+                {
+                    if (message.Content.Contains('\n'))
+                    {
+                        Console.WriteLine("Tip given to improve formatting" + normalizedCodeScore);
+                        EmbedBuilder embed = new()
+                        {
+                            Title = "🗨️USE MARKDOWN🗨️",
+                            Description =
+                                "\n ***\\`\\`\\`cs \n class YourClass \n { \n your awesome code \n } \n \\`\\`\\`*** \n "
+                        };
+
+                        await message.Channel.SendMessageAsync(embed: embed.Build());
+                    }
+                }   
             }
         }
     }
