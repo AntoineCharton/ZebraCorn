@@ -99,7 +99,7 @@ namespace ZebraCorn.Rules
                         // Embed property can be set within object initializer
                         Title = "🗨️USE MARKDOWN🗨️",
                         Description =
-                            "\n ***\\`\\`\\` \n class YourClass \n { \n your awsome code \n } \n \\`\\`\\`*** \n "
+                            "\n ***\\`\\`\\`cs \n class YourClass \n { \n your awsome code \n } \n \\`\\`\\`*** \n "
                     };
 
                     await message.Channel.SendMessageAsync(embed: embed.Build());
