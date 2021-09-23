@@ -48,7 +48,7 @@ namespace ZebraCorn.Rules
                 normalizedCodeScore -= 5;
             
             Console.WriteLine("Code score" + normalizedCodeScore);
-            if (normalizedCodeScore > 5 && !message.Content.Contains("```") && !message.Content.Contains('`'))
+            if (normalizedCodeScore > 6 && !message.Content.Contains("```") && !message.Content.Contains('`'))
             {
                 Console.WriteLine("Warning given to user to format code " + normalizedCodeScore);
                 if (normalizedCodeScore > 7 && message.Content.Contains('\n'))
@@ -73,7 +73,7 @@ namespace ZebraCorn.Rules
                     await message.Channel.SendMessageAsync(embed: embed.Build());
                 }
             }
-            else if(normalizedCodeScore > 5 && !message.Content.Contains("```"))
+            else if(normalizedCodeScore > 6 && !message.Content.Contains("```"))
             {
                 if (message.Content.Contains('\n') && normalizedCodeScore > 6)
                 {
