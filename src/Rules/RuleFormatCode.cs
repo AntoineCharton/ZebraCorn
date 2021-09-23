@@ -27,33 +27,15 @@ namespace ZebraCorn.Rules
             if (message.Author.IsBot || message.Content.Length < 50 && !isRuleApplied)
                 return;
 
-            var codeScore = 0;
-            var contains = new string[]
+            var contains = new[]
             {
                 "MonoBehaviour", "Using", "UnityEngine", "0f", "System.Collections", "System.Collections.Generic",
                 "public", "private", "internal", "float", "void", "Update", "Quaternion", "class", "-=", "+="
             };
 
-            foreach (var value in contains)
-            {
-                if (message.Content.Contains(value))
-                    codeScore++;
-            }
+            var codeScore = contains.Count(value => message.Content.Contains(value));
 
-            foreach (var character in message.Content)
-            {
-                if (character == '{' ||
-                    character == '}' ||
-                    character == '(' ||
-                    character == ')' ||
-                    character == '=' ||
-                    character == '+' ||
-                    character == '-' ||
-                    character == '*' ||
-                    character == '\n'
-                )
-                    codeScore++;
-            }
+            codeScore += message.Content.Count(character => character is '{' or '}' or '(' or ')' or '=' or '+' or '-' or '*' or '\n');
 
             var normalizedCodeScore = ((float) codeScore / message.Content.Length) * 100;
             
@@ -76,7 +58,7 @@ namespace ZebraCorn.Rules
                         // Embed property can be set within object initializer
                         Title = "⚠WARNING!⚠",
                         Description =
-                            "Use markdown!!! \n \n ***\\`\\`\\`cs \n class YourClass \n { \n your awsome code \n } \n \\`\\`\\`*** \n "
+                            "Use markdown!!! \n \n ***\\`\\`\\`cs \n class YourClass \n { \n your awesome code \n } \n \\`\\`\\`*** \n "
                     };
                     await message.Channel.SendMessageAsync(embed: embed.Build());
                 }
@@ -86,7 +68,7 @@ namespace ZebraCorn.Rules
                     {
                         // Embed property can be set within object initializer
                         Title = "🗨️USE MARKDOWN🗨️",
-                        Description = "\n \n ***\\` YourLineOfCode () \\`*** \n \n OR \n \n ***\\`\\`\\`cs \n class YourClass \n { \n your awsome code \n } \n \\`\\`\\`***"
+                        Description = "\n \n ***\\` YourLineOfCode () \\`*** \n \n OR \n \n ***\\`\\`\\`cs \n class YourClass \n { \n your awesome code \n } \n \\`\\`\\`***"
                     };
                     await message.Channel.SendMessageAsync(embed: embed.Build());
                 }
@@ -95,13 +77,13 @@ namespace ZebraCorn.Rules
             {
                 if (message.Content.Contains('\n') && normalizedCodeScore > 6)
                 {
-                    Console.WriteLine("Tip given to improve formating" + normalizedCodeScore);
+                    Console.WriteLine("Tip given to improve formatting" + normalizedCodeScore);
                     EmbedBuilder embed = new()
                     {
                         // Embed property can be set within object initializer
                         Title = "🗨️USE MARKDOWN🗨️",
                         Description =
-                            "\n ***\\`\\`\\`cs \n class YourClass \n { \n your awsome code \n } \n \\`\\`\\`*** \n "
+                            "\n ***\\`\\`\\`cs \n class YourClass \n { \n your awesome code \n } \n \\`\\`\\`*** \n "
                     };
 
                     await message.Channel.SendMessageAsync(embed: embed.Build());
