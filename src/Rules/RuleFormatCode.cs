@@ -42,8 +42,7 @@ namespace ZebraCorn.Rules
 
             foreach (var character in message.Content)
             {
-                if (
-                    character == '{' ||
+                if (character == '{' ||
                     character == '}' ||
                     character == '(' ||
                     character == ')' ||
@@ -62,6 +61,9 @@ namespace ZebraCorn.Rules
             var ContainsURL = new ContainsUrl();
             if (ContainsURL.IsValid(message))
                 normalizedCodeScore -= 3;
+
+            if (message.Content.Contains("c++"))
+                normalizedCodeScore -= 5;
             
             Console.WriteLine("Code score" + normalizedCodeScore);
             if (normalizedCodeScore > 5 && !message.Content.Contains("```") && !message.Content.Contains('`'))
@@ -78,7 +80,7 @@ namespace ZebraCorn.Rules
                     };
                     await message.Channel.SendMessageAsync(embed: embed.Build());
                 }
-                else
+                else if(message.Content.Contains('\n'))
                 {
                     EmbedBuilder embed = new()
                     {
