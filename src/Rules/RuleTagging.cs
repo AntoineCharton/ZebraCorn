@@ -21,9 +21,9 @@ namespace ZebraCorn
                                      appliedChannels.Contains(message.Channel.Id.ToString())) || applyToAllChannels;
 
             Boolean isBot = message.Author.IsBot;
+            Boolean isMod = message.Author.IsMod();
             
-            if (isBot || !isRuleApplied) return;
-            Boolean isSentByMod = illegalTags.Contains(message.Author.Id.ToString());
+            if (isBot || isMod|| !isRuleApplied) return;
 
             var channel = Program.Client.GetChannel(message.Channel.Id) as IMessageChannel;
             
