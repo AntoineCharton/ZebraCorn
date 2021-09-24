@@ -24,8 +24,12 @@ namespace ZebraCorn.Rules
             Boolean isRuleApplied = (appliedChannels.Contains(message.Channel.Name) ||
                                      appliedChannels.Contains(message.Channel.Id.ToString())) || applyToAllChannels;
 
-            if (message.Author.IsBot || message.Content.Length < 50 && !isRuleApplied)
-                return;
+            Boolean isBot = message.Author.IsBot;
+            Boolean isMod = message.Author.IsMod();
+            
+            if (isBot || isMod|| !isRuleApplied) return;
+            
+            if (message.Content.Length < 50) return;
 
             var contains = new[]
             {

@@ -17,10 +17,12 @@ namespace ZebraCorn
     {
         #region Fields
         
-        private static String[] _illegalTags;
+        //private static String[] _illegalTags;
         private static String[] _appliedChannels;
 
         public static DiscordSocketClient Client { get; private set; }
+
+        public static String[] Mods { get; private set; }
 
         #endregion
 
@@ -41,7 +43,7 @@ namespace ZebraCorn
 
                 String token = table[key: "bot-token"];
 
-                _illegalTags = (from TomlNode __node in table[key: "illegal-tags"] select __node.ToString()).ToArray();
+                Mods = (from TomlNode __node in table[key: "illegal-tags"] select __node.ToString()).ToArray();
                 
                 _appliedChannels = (from TomlNode __node in table[key: "applied-channels"] select __node.ToString()).ToArray();
 
@@ -65,7 +67,7 @@ namespace ZebraCorn
             Client.AddLogMessages();
             //Rules
             Client.AddRuleGrouping(appliedChannels:   _appliedChannels, repetitions: 6, ruleExceptions: new IMessagesRule[]{containsUrl, maxCharacters, containsAttachment, containsSticker, containsReply});
-            Client.AddRuleTagging(appliedChannels:    _appliedChannels, illegalTags: _illegalTags);
+            Client.AddRuleTagging(appliedChannels:    _appliedChannels, illegalTags: Mods);
             Client.AddRuleFormatCode(appliedChannels: _appliedChannels);
 
             await Task.Delay(-1);
