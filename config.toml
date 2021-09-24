@@ -1,4 +1,4 @@
-﻿bot-token = "ODg5NjA0NjQ3MTU1ODE0NDIw.YUjq4w.5v7xyI_4jGCKenkyD7t3oiSUO4c"
+bot-token = "ODg5NjA0NjQ3MTU1ODE0NDIw.YUjq4w.5v7xyI_4jGCKenkyD7t3oiSUO4c"
 
 illegal-tags = [
 "714131272045297842", # SAM ROLE
@@ -11,7 +11,7 @@ illegal-tags = [
 "209324808742240256", # CHIZARUU PERSONAL
 ]
 
-grouping-channels = [
+applied-channels = [
 "713824411257667625", # HELP SAMYAM
 "889311836804100116", # HELP TESTSERVER
 ]

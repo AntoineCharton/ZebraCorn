@@ -10,11 +10,15 @@ using Tommy;
 
 namespace ZebraCorn
 {
+    using Rules;
+    using Rules.MessagesRules;
+    
     internal static class Program
     {
         #region Fields
         
         private static String[] _illegalTags;
+        private static String[] _appliedChannels;
 
         public static DiscordSocketClient Client { get; private set; }
 
@@ -38,6 +42,8 @@ namespace ZebraCorn
                 String token = table[key: "bot-token"];
 
                 _illegalTags = (from TomlNode __node in table[key: "illegal-tags"] select __node.ToString()).ToArray();
+                
+                _appliedChannels = (from TomlNode __node in table[key: "applied-channels"] select __node.ToString()).ToArray();
 
                 await Client.LoginAsync(tokenType: TokenType.Bot, token: token);
                 await Client.StartAsync();
@@ -49,13 +55,20 @@ namespace ZebraCorn
                 return Task.CompletedTask;
             };
             
-            //Rules
+            //StringRules
+            var containsUrl = new ContainsUrl();
+            var maxCharacters = new HasMaxCharacters();
+            var containsAttachment = new ContainsAttachement();
+            var containsSticker = new ContainsSticker();
+            var containsReply = new ContainsReply();
+            
             Client.AddLogMessages();
-            Client.AddRuleGrouping(applyToAllChannels: true); //appliedChannels: _groupingRuleAppliedChannels);
-            Client.AddRuleTagging(applyToAllChannels: true, illegalTags: _illegalTags);
-            //"Don't @ mods unless it's urgent. Better be a life and death situation!!! \nUse reply instead.");
+            //Rules
+            Client.AddRuleGrouping(appliedChannels:   _appliedChannels, repetitions: 6, ruleExceptions: new IMessagesRule[]{containsUrl, maxCharacters, containsAttachment, containsSticker, containsReply});
+            Client.AddRuleTagging(appliedChannels:    _appliedChannels, illegalTags: _illegalTags);
+            Client.AddRuleFormatCode(appliedChannels: _appliedChannels);
 
-            await Task.Delay(millisecondsDelay: -1);
+            await Task.Delay(-1);
             Client.Dispose();
         }
         
