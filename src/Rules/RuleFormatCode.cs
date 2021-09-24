@@ -18,26 +18,15 @@ namespace ZebraCorn.Rules
             Console.WriteLine("ADDED: Grouping rule");
         }
 
-        private static async Task OnMessageReceived(SocketMessage message, Boolean applyToAllChannels,
-            String[] appliedChannels)
+        static float GetCodeScore(SocketMessage message)
         {
-            Boolean isRuleApplied = (appliedChannels.Contains(message.Channel.Name) ||
-                                     appliedChannels.Contains(message.Channel.Id.ToString())) || applyToAllChannels;
-
-            Boolean isBot = message.Author.IsBot;
-            Boolean isMod = message.Author.IsMod();
-            
-            if (isBot || isMod|| !isRuleApplied) return;
-            
-            if (message.Content.Length < 50) return;
-
-            var contains = new[]
+            var codeContains = new[]
             {
                 "MonoBehaviour", "Using", "UnityEngine", "0f", "System.Collections", "System.Collections.Generic",
                 "public", "private", "internal", "float", "void", "Update", "Quaternion", "class", "-=", "+="
             };
 
-            var codeScore = contains.Count(value => message.Content.Contains(value));
+            var codeScore = codeContains.Count(value => message.Content.Contains(value));
 
             codeScore += message.Content.Count(character => character is '{' or '}' or '(' or ')' or '=' or '+' or '-' or '*' or '\n');
 
@@ -50,9 +39,40 @@ namespace ZebraCorn.Rules
 
             if (message.Content.Contains("c++"))
                 normalizedCodeScore -= 5;
+
+            return normalizedCodeScore;
+        }
+
+        static float GetTextScore(SocketMessage message)
+        {
+            var codeContains = new[]
+            {
+                "I ", "We", " a ", "it's", "it", "you", "**", "the", ". ", ", "
+            };
             
+            var textScore = codeContains.Count(value => message.Content.Contains(value));
+            var normalizedTextScore = ((float) textScore / message.Content.Length) * 100;
+
+            return normalizedTextScore;
+        }
+
+        private static async Task OnMessageReceived(SocketMessage message, Boolean applyToAllChannels,
+            String[] appliedChannels)
+        {
+            Boolean isRuleApplied = (appliedChannels.Contains(message.Channel.Name) ||
+                                     appliedChannels.Contains(message.Channel.Id.ToString())) || applyToAllChannels;
+
+            Boolean isBot = message.Author.IsBot;
+            Boolean isMod = message.Author.IsMod();
+            if (isBot || isMod|| !isRuleApplied) return;
+            
+            if (message.Content.Length < 50) return;
+
+            var normalizedCodeScore = GetCodeScore(message);
+            var normalizedTextScore = GetTextScore(message);
             Console.WriteLine("Code score" + normalizedCodeScore);
-            if (normalizedCodeScore > 6 && !message.Content.Contains("```") && !message.Content.Contains('`'))
+            Console.WriteLine("Text score" + normalizedTextScore);
+            if (normalizedCodeScore > 6 && !message.Content.Contains("```") && !message.Content.Contains('`') && normalizedTextScore < 2)
             {
                 Console.WriteLine("Warning given to user to format code " + normalizedCodeScore);
                 if (normalizedCodeScore > 7 && message.Content.Contains('\n'))
@@ -77,7 +97,7 @@ namespace ZebraCorn.Rules
                     await message.Channel.SendMessageAsync(embed: embed.Build());
                 }
             }
-            else if(normalizedCodeScore > 6 && !message.Content.Contains("```"))
+            else if(normalizedCodeScore > 6 && !message.Content.Contains("```") && normalizedTextScore < 2)
             {
                 if (message.Content.Contains('\n') && normalizedCodeScore > 6)
                 {
