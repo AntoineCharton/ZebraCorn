@@ -11,10 +11,7 @@ namespace ZebraCorn.Rules.MessagesRules
                 @"((http|ftp|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&amp;:/~\+#]*[\w\-\@?^=%&amp;/~\+#])?)",
                 "<a target='_blank' href='$1'>$1</a>");
 
-            if (text != message.Content)
-                return true;
-
-            return false;
+            return text != message.Content;
         }
     }
 }
