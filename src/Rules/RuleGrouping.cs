@@ -63,7 +63,7 @@ namespace ZebraCorn
                         {
                             // Embed property can be set within object initializer
                             Title = "⚠WARNING!⚠",
-                            Description = "Group your messages!!!"
+                            Description = "Group your messages please!"
                         };
 
                         await channel.SendMessageAsync(embed: embed.Build());

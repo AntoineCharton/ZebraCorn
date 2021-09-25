@@ -21,7 +21,9 @@ namespace ZebraCorn
         
         static async Task OnMessageReceived(SocketMessage message)
         {
-            Console.WriteLine($"#{message.Channel} {message.Author} {message.Timestamp} \n{message.Content} \n");
+            Console.WriteLine(value: 
+                "────────────────────────────────" + "\n" +
+                $"#{message.Channel} {message.Author} {message.Timestamp} \n{message.Content} \n");
         }
         
         static async Task OnMessageUpdated(Cacheable<IMessage, ulong> before, SocketMessage after, ISocketMessageChannel channel)

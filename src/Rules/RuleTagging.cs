@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -42,7 +42,7 @@ namespace ZebraCorn
                     EmbedBuilder embed = new()
                     {
                         Title = "⚠WARNING!⚠",
-                        Description = "Don't tag Mods please!!!!"
+                        Description = "Don't tag Mods please!"
                     };
 
                     await channel.SendMessageAsync(embed: embed.Build());
